@@ -47,12 +47,16 @@ void unlock_door() {
 void check_code() {
   bool should_unlock = true;
   for(int index = 0; index < number_of_channels; index++) {
-    digitalWrite(channels[index][OUTPUT_INDEX], HIGH);
-    delay(channel_check_delay);
-    int reading = digitalRead(channels[index][INPUT_INDEX]);
-    should_unlock =  should_unlock && (reading == HIGH);
-    digitalWrite(channels[index][OUTPUT_INDEX], LOW);
+    should_unlock = should_unlock && channel_connected(index);
   }
   correct_code = should_unlock; 
+}
+
+bool channel_connected(int index) {
+  digitalWrite(channels[index][OUTPUT_INDEX], HIGH);
+  delay(channel_check_delay);
+  int connection = digitalRead(channels[index][INPUT_INDEX]);
+  digitalWrite(channels[index][OUTPUT_INDEX], LOW);
+  return (connection == HIGH);
 }
 
